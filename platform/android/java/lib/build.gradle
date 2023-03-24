@@ -8,7 +8,7 @@ ext {
     PUBLISH_ARTIFACT_ID = 'godot'
 }
 
-apply from: "../scripts/publish-module.gradle"
+//apply from: "../scripts/publish-module.gradle"
 
 dependencies {
     implementation libraries.kotlinStdLib
@@ -40,17 +40,17 @@ android {
         jvmTarget = versions.javaVersion
     }
 
-    buildTypes {
-        dev {
-            initWith debug
-        }
-    }
-
-    flavorDimensions "products"
-    productFlavors {
-        editor {}
-        template {}
-    }
+//    buildTypes {
+//        dev {
+//            initWith debug
+//        }
+//    }
+//
+//    flavorDimensions "products"
+//    productFlavors {
+//        editor {}
+//        template {}
+//    }
 
     lintOptions {
         abortOnError false
@@ -76,38 +76,40 @@ android {
             assets.srcDirs = ['assets']
         }
 
-        debug.jniLibs.srcDirs = ['libs/debug']
-        dev.jniLibs.srcDirs = ['libs/dev']
+        debug.jniLibs.srcDirs = ['libs/dev']
+//        dev.jniLibs.srcDirs = ['libs/dev']
         release.jniLibs.srcDirs = ['libs/release']
 
         // Editor jni library
-        editorDebug.jniLibs.srcDirs = ['libs/tools/debug']
-        editorDev.jniLibs.srcDirs = ['libs/tools/dev']
+//        editorDebug.jniLibs.srcDirs = ['libs/tools/debug']
+//        editorDev.jniLibs.srcDirs = ['libs/tools/dev']
     }
 
     // Disable 'editorRelease'.
     // The editor can't be used with target=release as debugging tools are then not
     // included, and it would crash on errors instead of reporting them.
-    variantFilter { variant ->
-        if (variant.name == "editorRelease") {
-            setIgnore(true)
-        }
-    }
+//    variantFilter { variant ->
+//        if (variant.name == "editorRelease") {
+//            setIgnore(true)
+//        }
+//    }
 
     libraryVariants.all { variant ->
-        def flavorName = variant.getFlavorName()
-        if (flavorName == null || flavorName == "") {
-            throw new GradleException("Invalid product flavor: $flavorName")
-        }
+//        def flavorName = variant.getFlavorName()
+//        if (flavorName == null || flavorName == "") {
+//            throw new GradleException("Invalid product flavor: $flavorName")
+//        }
+        def flavorName = ""
 
         boolean toolsFlag = flavorName == "editor"
 
         def buildType = variant.buildType.name
-        if (buildType == null || buildType == "" || !supportedTargetsMap.containsKey(buildType)) {
-            throw new GradleException("Invalid build type: $buildType")
-        }
+//        if (buildType == null || buildType == "" || !supportedTargetsMap.containsKey(buildType)) {
+//            throw new GradleException("Invalid build type: $buildType")
+//        }
 
-        def sconsTarget = supportedTargetsMap[buildType]
+//        def sconsTarget = supportedTargetsMap[buildType]
+        def sconsTarget = buildType
         if (sconsTarget == null || sconsTarget == "") {
             throw new GradleException("Invalid scons target: $sconsTarget")
         }
@@ -176,4 +178,8 @@ android {
             withJavadocJar()
         }
     }
+}
+
+def getSconsTaskName(String flavor, String buildType, String abi) {
+    return "compileGodotNativeLibs" + flavor.capitalize() + buildType.capitalize() + abi.capitalize()
 }
