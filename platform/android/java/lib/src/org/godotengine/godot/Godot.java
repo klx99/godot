@@ -33,15 +33,6 @@ package org.godotengine.godot;
 import static android.content.Context.MODE_PRIVATE;
 import static android.content.Context.WINDOW_SERVICE;
 
-import org.godotengine.godot.input.GodotEditText;
-import org.godotengine.godot.io.directory.DirectoryAccessHandler;
-import org.godotengine.godot.io.file.FileAccessHandler;
-import org.godotengine.godot.plugin.GodotPlugin;
-import org.godotengine.godot.plugin.GodotPluginRegistry;
-import org.godotengine.godot.utils.GodotNetUtils;
-import org.godotengine.godot.utils.PermissionsUtil;
-import org.godotengine.godot.xr.XRMode;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -96,6 +87,15 @@ import com.google.android.vending.expansion.downloader.Helpers;
 import com.google.android.vending.expansion.downloader.IDownloaderClient;
 import com.google.android.vending.expansion.downloader.IDownloaderService;
 import com.google.android.vending.expansion.downloader.IStub;
+
+import org.godotengine.godot.input.GodotEditText;
+import org.godotengine.godot.io.directory.DirectoryAccessHandler;
+import org.godotengine.godot.io.file.FileAccessHandler;
+import org.godotengine.godot.plugin.GodotPlugin;
+import org.godotengine.godot.plugin.GodotPluginRegistry;
+import org.godotengine.godot.utils.GodotNetUtils;
+import org.godotengine.godot.utils.PermissionsUtil;
+import org.godotengine.godot.xr.XRMode;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -344,7 +344,10 @@ public class Godot extends Fragment implements SensorEventListener, IDownloaderC
 	 * Used by the native code (java_godot_lib_jni.cpp) to complete initialization of the GLSurfaceView view and renderer.
 	 */
 	@Keep
-	private void onVideoInit() {
+// QCode Modified >>>
+//	private void onVideoInit() {
+	protected void onVideoInit() {
+// QCode Modified <<<
 		boolean use_gl3 = getGLESVersionCode() >= 0x00030000;
 
 		final Activity activity = getActivity();
@@ -495,7 +498,10 @@ public class Godot extends Fragment implements SensorEventListener, IDownloaderC
 	private String[] parseCommandLine() {
 		InputStream is;
 		try {
-			is = getActivity().getAssets().open("_cl_");
+// QCode Modified >>>
+//			is = getActivity().getAssets().open("_cl_");
+			is = getContext().getAssets().open("_cl_");
+// QCode Modified <<<
 			byte[] len = new byte[4];
 			int r = is.read(len);
 			if (r < 4) {

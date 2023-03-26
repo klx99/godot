@@ -69,7 +69,10 @@ public class GodotIO {
 	final int SCREEN_SENSOR_PORTRAIT = 5;
 	final int SCREEN_SENSOR = 6;
 
-	GodotIO(Activity p_activity) {
+// QCode Modified >>>
+//	GodotIO(Activity p_activity) {
+	public GodotIO(Activity p_activity) {
+// QCode Modified <<<
 		activity = p_activity;
 		String androidId = Settings.Secure.getString(activity.getContentResolver(),
 				Settings.Secure.ANDROID_ID);

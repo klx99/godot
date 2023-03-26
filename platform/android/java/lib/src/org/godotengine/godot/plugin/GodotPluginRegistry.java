@@ -30,8 +30,6 @@
 
 package org.godotengine.godot.plugin;
 
-import org.godotengine.godot.Godot;
-
 import android.app.Activity;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -40,6 +38,8 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
+
+import org.godotengine.godot.Godot;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -165,7 +165,10 @@ public final class GodotPluginRegistry {
 					}
 				}
 			}
-		} catch (PackageManager.NameNotFoundException e) {
+// QCode Modified >>>
+//		} catch (PackageManager.NameNotFoundException e) {
+		} catch (Exception e) {
+// QCode Modified <<<
 			Log.e(TAG, "Unable load Godot Android plugins from the manifest file.", e);
 		}
 	}
