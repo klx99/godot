@@ -29,8 +29,7 @@ def get_opts():
 
 # Return the ANDROID_SDK_ROOT environment variable.
 def get_env_android_sdk_root():
-    # return os.environ.get("ANDROID_SDK_ROOT", -1)
-    return "/Users/mengxk/Library/Android/sdk/";
+    return os.environ.get("ANDROID_SDK_ROOT", -1)
 
 
 def get_min_sdk_version(platform):
@@ -43,7 +42,10 @@ def get_android_ndk_root(env):
 
 # This is kept in sync with the value in 'platform/android/java/app/config.gradle'.
 def get_ndk_version():
-    return "23.2.8568313"
+    return "25.2.9519653"
+# QCode Modified >>>
+#    return "23.2.8568313"
+# QCode Modified <<<
 
 
 def get_flags():

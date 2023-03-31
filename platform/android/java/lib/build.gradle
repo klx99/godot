@@ -163,6 +163,10 @@ android {
             // Creating gradle task to generate the native libraries for the selected abi.
             def taskName = getSconsTaskName(flavorName, buildType, selectedAbi)
             tasks.create(name: taskName, type: Exec) {
+// QCode Added >>>
+                def sdkDir = android.getSdkDirectory().getAbsolutePath()
+                environment "ANDROID_SDK_ROOT", sdkDir
+// QCode Added <<<
                 executable sconsExecutableFile.absolutePath
                 args "--directory=${pathToRootDir}", "platform=android", "tools=${toolsFlag}", "target=${sconsTarget}", "android_arch=${selectedAbi}", "-j" + Runtime.runtime.availableProcessors()
             }
