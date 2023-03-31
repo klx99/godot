@@ -1157,7 +1157,10 @@ JavaClassWrapper::JavaClassWrapper(jobject p_activity) {
 	JNIEnv *env = get_jni_env();
 	ERR_FAIL_NULL(env);
 
-	jclass activity = env->FindClass("android/app/Activity");
+// QCode Modified >>>
+//	jclass activity = env->FindClass("android/app/Activity");
+    jclass activity = env->FindClass("android/content/Context");
+// QCode Modified <<<
 	jmethodID getClassLoader = env->GetMethodID(activity, "getClassLoader", "()Ljava/lang/ClassLoader;");
 	classLoader = env->CallObjectMethod(p_activity, getClassLoader);
 	classLoader = (jclass)env->NewGlobalRef(classLoader);

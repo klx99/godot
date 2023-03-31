@@ -30,14 +30,10 @@
 
 package org.godotengine.godot;
 
-import org.godotengine.godot.input.GodotEditText;
-
-import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.graphics.Point;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -46,10 +42,10 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
-import android.view.DisplayCutout;
-import android.view.WindowInsets;
+import android.view.WindowManager;
 
-import java.util.List;
+import org.godotengine.godot.input.GodotEditText;
+
 import java.util.Locale;
 
 // Wrapper for native library
@@ -57,7 +53,9 @@ import java.util.Locale;
 public class GodotIO {
 	private static final String TAG = GodotIO.class.getSimpleName();
 
-	private final Activity activity;
+// QCode Modified >>>
+	private final Context activity;
+// QCode Added <<<
 	private final String uniqueId;
 	GodotEditText edit;
 
@@ -71,7 +69,7 @@ public class GodotIO {
 
 // QCode Modified >>>
 //	GodotIO(Activity p_activity) {
-	public GodotIO(Activity p_activity) {
+	public GodotIO(Context p_activity) {
 // QCode Modified <<<
 		activity = p_activity;
 		String androidId = Settings.Secure.getString(activity.getContentResolver(),
@@ -158,7 +156,11 @@ public class GodotIO {
 	}
 
 	public double getScreenRefreshRate(double fallback) {
-		Display display = activity.getWindowManager().getDefaultDisplay();
+// QCode Modified >>>
+//		Display display = activity.getWindowManager().getDefaultDisplay();
+		WindowManager windowManager = (WindowManager) activity.getSystemService(Context.WINDOW_SERVICE);
+		Display display = windowManager.getDefaultDisplay();
+// QCode Modified <<<
 		if (display != null) {
 			return display.getRefreshRate();
 		}
@@ -167,22 +169,29 @@ public class GodotIO {
 
 	public int[] getWindowSafeArea() {
 		DisplayMetrics metrics = activity.getResources().getDisplayMetrics();
-		Display display = activity.getWindowManager().getDefaultDisplay();
+// QCode Modified >>>
+//		Display display = activity.getWindowManager().getDefaultDisplay();
+		WindowManager windowManager = (WindowManager) activity.getSystemService(Context.WINDOW_SERVICE);
+		Display display = windowManager.getDefaultDisplay();
+// QCode Modified <<<
 		Point size = new Point();
 		display.getRealSize(size);
 
 		int[] result = { 0, 0, size.x, size.y };
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-			WindowInsets insets = activity.getWindow().getDecorView().getRootWindowInsets();
-			DisplayCutout cutout = insets.getDisplayCutout();
-			if (cutout != null) {
-				int insetLeft = cutout.getSafeInsetLeft();
-				int insetTop = cutout.getSafeInsetTop();
-				result[0] = insetLeft;
-				result[1] = insetTop;
-				result[2] -= insetLeft + cutout.getSafeInsetRight();
-				result[3] -= insetTop + cutout.getSafeInsetBottom();
-			}
+// QCode Removed >>>
+//			WindowInsets insets = activity.getWindow().getDecorView().getRootWindowInsets();
+//			DisplayCutout cutout = insets.getDisplayCutout();
+//			if (cutout != null) {
+//				int insetLeft = cutout.getSafeInsetLeft();
+//				int insetTop = cutout.getSafeInsetTop();
+//				result[0] = insetLeft;
+//				result[1] = insetTop;
+//				result[2] -= insetLeft + cutout.getSafeInsetRight();
+//				result[3] -= insetTop + cutout.getSafeInsetBottom();
+//			}
+			Log.e(TAG, "GodotIO.getWindowSafeArea() QCode Removed!!!");
+// QCode Removed <<<
 		}
 		return result;
 	}
@@ -190,20 +199,24 @@ public class GodotIO {
 	public int[] getDisplayCutouts() {
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P)
 			return new int[0];
-		DisplayCutout cutout = activity.getWindow().getDecorView().getRootWindowInsets().getDisplayCutout();
-		if (cutout == null)
-			return new int[0];
-		List<Rect> rects = cutout.getBoundingRects();
-		int cutouts = rects.size();
-		int[] result = new int[cutouts * 4];
-		int index = 0;
-		for (Rect rect : rects) {
-			result[index++] = rect.left;
-			result[index++] = rect.top;
-			result[index++] = rect.width();
-			result[index++] = rect.height();
-		}
-		return result;
+// QCode Modified >>>
+//		DisplayCutout cutout = activity.getWindow().getDecorView().getRootWindowInsets().getDisplayCutout();
+//		if (cutout == null)
+//			return new int[0];
+//		List<Rect> rects = cutout.getBoundingRects();
+//		int cutouts = rects.size();
+//		int[] result = new int[cutouts * 4];
+//		int index = 0;
+//		for (Rect rect : rects) {
+//			result[index++] = rect.left;
+//			result[index++] = rect.top;
+//			result[index++] = rect.width();
+//			result[index++] = rect.height();
+//		}
+//		return result;
+		Log.e(TAG, "GodotIO.getDisplayCutouts() QCode Removed!!!");
+		return new int[0];
+// QCode Modified <<<
 	}
 
 	public void showKeyboard(String p_existing_text, boolean p_multiline, int p_max_input_length, int p_cursor_start, int p_cursor_end) {
@@ -220,60 +233,67 @@ public class GodotIO {
 	}
 
 	public void setScreenOrientation(int p_orientation) {
-		switch (p_orientation) {
-			case SCREEN_LANDSCAPE: {
-				activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-			} break;
-			case SCREEN_PORTRAIT: {
-				activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-			} break;
-			case SCREEN_REVERSE_LANDSCAPE: {
-				activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
-			} break;
-			case SCREEN_REVERSE_PORTRAIT: {
-				activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT);
-			} break;
-			case SCREEN_SENSOR_LANDSCAPE: {
-				activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE);
-			} break;
-			case SCREEN_SENSOR_PORTRAIT: {
-				activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT);
-			} break;
-			case SCREEN_SENSOR: {
-				activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_USER);
-			} break;
-		}
+// QCode Modified >>>
+//		switch (p_orientation) {
+//			case SCREEN_LANDSCAPE: {
+//				activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+//			} break;
+//			case SCREEN_PORTRAIT: {
+//				activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//			} break;
+//			case SCREEN_REVERSE_LANDSCAPE: {
+//				activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
+//			} break;
+//			case SCREEN_REVERSE_PORTRAIT: {
+//				activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT);
+//			} break;
+//			case SCREEN_SENSOR_LANDSCAPE: {
+//				activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE);
+//			} break;
+//			case SCREEN_SENSOR_PORTRAIT: {
+//				activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT);
+//			} break;
+//			case SCREEN_SENSOR: {
+//				activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_USER);
+//			} break;
+//		}
+		Log.e(TAG, "GodotIO.setScreenOrientation() QCode Removed!!!");
+// QCode Modified <<<
 	}
 
 	public int getScreenOrientation() {
-		int orientation = activity.getRequestedOrientation();
-		switch (orientation) {
-			case ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE:
-				return SCREEN_LANDSCAPE;
-			case ActivityInfo.SCREEN_ORIENTATION_PORTRAIT:
-				return SCREEN_PORTRAIT;
-			case ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE:
-				return SCREEN_REVERSE_LANDSCAPE;
-			case ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT:
-				return SCREEN_REVERSE_PORTRAIT;
-			case ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE:
-			case ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE:
-				return SCREEN_SENSOR_LANDSCAPE;
-			case ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT:
-			case ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT:
-				return SCREEN_SENSOR_PORTRAIT;
-			case ActivityInfo.SCREEN_ORIENTATION_SENSOR:
-			case ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR:
-			case ActivityInfo.SCREEN_ORIENTATION_FULL_USER:
-				return SCREEN_SENSOR;
-			case ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED:
-			case ActivityInfo.SCREEN_ORIENTATION_USER:
-			case ActivityInfo.SCREEN_ORIENTATION_BEHIND:
-			case ActivityInfo.SCREEN_ORIENTATION_NOSENSOR:
-			case ActivityInfo.SCREEN_ORIENTATION_LOCKED:
-			default:
-				return -1;
-		}
+// QCode Modified >>>
+//		int orientation = activity.getRequestedOrientation();
+//		switch (orientation) {
+//			case ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE:
+//				return SCREEN_LANDSCAPE;
+//			case ActivityInfo.SCREEN_ORIENTATION_PORTRAIT:
+//				return SCREEN_PORTRAIT;
+//			case ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE:
+//				return SCREEN_REVERSE_LANDSCAPE;
+//			case ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT:
+//				return SCREEN_REVERSE_PORTRAIT;
+//			case ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE:
+//			case ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE:
+//				return SCREEN_SENSOR_LANDSCAPE;
+//			case ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT:
+//			case ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT:
+//				return SCREEN_SENSOR_PORTRAIT;
+//			case ActivityInfo.SCREEN_ORIENTATION_SENSOR:
+//			case ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR:
+//			case ActivityInfo.SCREEN_ORIENTATION_FULL_USER:
+//				return SCREEN_SENSOR;
+//			case ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED:
+//			case ActivityInfo.SCREEN_ORIENTATION_USER:
+//			case ActivityInfo.SCREEN_ORIENTATION_BEHIND:
+//			case ActivityInfo.SCREEN_ORIENTATION_NOSENSOR:
+//			case ActivityInfo.SCREEN_ORIENTATION_LOCKED:
+//			default:
+//				return -1;
+//		}
+		Log.e(TAG, "GodotIO.getScreenOrientation() QCode Removed!!!");
+		return -1;
+// QCode Modified <<<
 	}
 
 	public void setEdit(GodotEditText _edit) {

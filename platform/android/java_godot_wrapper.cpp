@@ -49,7 +49,10 @@ GodotJavaWrapper::GodotJavaWrapper(JNIEnv *p_env, jobject p_activity, jobject p_
 		// this is a pretty serious fail.. bail... pointers will stay 0
 		return;
 	}
-	activity_class = p_env->FindClass("android/app/Activity");
+// QCode Modified >>>
+//	activity_class = p_env->FindClass("android/app/Activity");
+    activity_class = p_env->FindClass("android/content/Context");
+// QCode Modified <<<
 	if (activity_class) {
 		activity_class = (jclass)p_env->NewGlobalRef(activity_class);
 	} else {

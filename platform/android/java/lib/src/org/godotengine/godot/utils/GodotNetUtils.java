@@ -44,6 +44,11 @@ public class GodotNetUtils {
 	/* A single, reference counted, multicast lock, or null if permission CHANGE_WIFI_MULTICAST_STATE is missing */
 	private WifiManager.MulticastLock multicastLock;
 
+// QCode Added >>>
+	public GodotNetUtils(Context context) {
+	}
+// QCode Added <<<
+
 	public GodotNetUtils(Activity p_activity) {
 		if (PermissionsUtil.hasManifestPermission(p_activity, "android.permission.CHANGE_WIFI_MULTICAST_STATE")) {
 			WifiManager wifi = (WifiManager)p_activity.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
