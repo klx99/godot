@@ -50,15 +50,17 @@ Error FileAccessAndroid::_open(const String &p_path, int p_mode_flags) {
 	} else if (path.begins_with("res://")) {
 		path = path.substr(6, path.length());
 	}
-// QCode Modified >>>
-    if (path.begins_with(".import")) {
-        path = path.substr(1, path.length());
-    }
-// QCode Modified <<<
 
 	ERR_FAIL_COND_V(p_mode_flags & FileAccess::WRITE, ERR_UNAVAILABLE); //can't write on android..
 	asset = AAssetManager_open(asset_manager, path.utf8().get_data(), AASSET_MODE_STREAMING);
 	if (!asset) {
+// QCode Added >>>
+        if (path.begins_with(".import")) {
+            path = path.substr(1, path.length());
+        }
+        asset = AAssetManager_open(asset_manager, path.utf8().get_data(), AASSET_MODE_STREAMING);
+        if (!asset)
+// QCode Added <<<
 		return ERR_CANT_OPEN;
 	}
 	len = AAsset_getLength(asset);
