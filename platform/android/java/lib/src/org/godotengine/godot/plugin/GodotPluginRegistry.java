@@ -59,7 +59,9 @@ public final class GodotPluginRegistry {
 
 	private GodotPluginRegistry(Godot godot) {
 		registry = new ConcurrentHashMap<>();
-		loadPlugins(godot);
+// QCode Removed >>>
+//		loadPlugins(godot);
+// QCode Removed <<<
 	}
 
 	/**
@@ -165,10 +167,7 @@ public final class GodotPluginRegistry {
 					}
 				}
 			}
-// QCode Modified >>>
-//		} catch (PackageManager.NameNotFoundException e) {
-		} catch (Exception e) {
-// QCode Modified <<<
+		} catch (PackageManager.NameNotFoundException e) {
 			Log.e(TAG, "Unable load Godot Android plugins from the manifest file.", e);
 		}
 	}
