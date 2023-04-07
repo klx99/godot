@@ -39,6 +39,72 @@
 #include "servers/visual/visual_server_globals.h"
 #include "skeleton.h"
 
+static _ALWAYS_INLINE_ int8_t make_int8(float f)
+{
+	return ((int8_t)f)& 0xff;
+}
+static _ALWAYS_INLINE_ Vector3 fetch_data(VS::ArrayType type,const uint32_t format,const Vector3 &src)
+{
+	Vector3 data=src;
+	int val;
+	switch(type){
+		case VS::ARRAY_NORMAL:
+			memcpy(&val, &src.x, sizeof(float));
+			if (format & VS::ARRAY_FLAG_USE_OCTAHEDRAL_COMPRESSION){
+				data.x = (float)((short)(val & 0xffff));
+				data.y = (float)((short)((val >> 16) & 0xffff));
+				data.z=0;
+			}else if(format & VS::ARRAY_COMPRESS_NORMAL){
+				data.x = (float)((char)(val & 0xff));
+				data.y = (float)((char)((val >> 8) & 0xff));
+				data.z = (float)((char)((val >> 16) & 0xff));
+			}
+			break;
+		case VS::ARRAY_TANGENT:
+			memcpy(&val, &src.y, sizeof(float));
+			if (format & VS::ARRAY_FLAG_USE_OCTAHEDRAL_COMPRESSION){
+				data.x = (float)((short)(val & 0xffff));
+				data.y = (float)((short)((val >> 16) & 0xffff));
+				data.z=0;
+			}else if(format & VS::ARRAY_COMPRESS_NORMAL){
+				data.x = (float)((char)(val & 0xff));
+				data.y = (float)((char)((val >> 8) & 0xff));
+				data.z = (float)((char)((val >> 16) & 0xff));
+			}
+			break;
+		default:
+			break;
+	}
+	return data;
+}
+
+static _ALWAYS_INLINE_ void store_data(VS::ArrayType type,const uint32_t format,Vector3 &src,Vector3 &dst)
+{
+	int val;
+	switch(type){
+		case VS::ARRAY_NORMAL:
+			if (format & VS::ARRAY_FLAG_USE_OCTAHEDRAL_COMPRESSION){
+				val = (((short)src.x)&0xffff) | ((((short)src.y) << 16)&0xffff0000);
+				memcpy(&dst.x,&val,sizeof(float));
+			}else if(format & VS::ARRAY_COMPRESS_NORMAL){
+				val=(make_int8(src.x)&0xff)| ((make_int8(src.y)<<8)&0xff00) | ((make_int8(src.z)<<16)&0xff0000) ;
+				memcpy(&dst.x,&val,sizeof(float));
+			}
+			break;
+		case VS::ARRAY_TANGENT:
+			if (format & VS::ARRAY_FLAG_USE_OCTAHEDRAL_COMPRESSION){
+				val = (((short)src.x) & 0xffff) | ((((short)src.y) << 16) & 0xffff0000);
+				memcpy(&dst.y, &val, sizeof(float));
+			}else if(format & VS::ARRAY_COMPRESS_NORMAL){
+				val = (make_int8(src.x) & 0xff) | ((make_int8(src.y) << 8) & 0xff00) | ((make_int8(src.z) << 16) & 0xff0000);
+				memcpy(&dst.y, &val, sizeof(float));
+			}
+			break;
+		default:
+			break;
+	}
+}
+
 bool MeshInstance::_set(const StringName &p_name, const Variant &p_value) {
 	//this is not _too_ bad performance wise, really. it only arrives here if the property was not set anywhere else.
 	//add to it that it's probably found on first call to _set anyway.
@@ -492,17 +558,20 @@ void MeshInstance::_update_skinning() {
 					transform.basis.transpose();
 				}
 
-				const Vector3 &normal_read = (const Vector3 &)buffer_read[vertex_offset + offset_normals];
-				Vector3 &normal = (Vector3 &)buffer_write[vertex_offset_write + offset_normals_write];
-				normal = transform.basis.xform(normal_read);
+				const Vector3 &tmp_normal_read = (const Vector3 &)buffer_read[vertex_offset + offset_normals];
+				Vector3 normal_read = fetch_data(VisualServer::ARRAY_NORMAL,format_read,tmp_normal_read);
+				Vector3 &normal = (Vector3 &)buffer_write[vertex_offset_write + offset_normals_write]; 
+				Vector3 tmp_normal = transform.basis.xform(normal_read);
+				store_data(VisualServer::ARRAY_NORMAL,format_read,tmp_normal,normal);
 
 				if (transform_tangents) {
-					const Vector3 &tangent_read = (const Vector3 &)buffer_read[vertex_offset + offset_tangents];
+					const Vector3 &tmp_tangent_read = (const Vector3 &)buffer_read[vertex_offset + offset_tangents];
+					Vector3 tangent_read = fetch_data(VisualServer::ARRAY_NORMAL,format_read,tmp_tangent_read);
 					Vector3 &tangent = (Vector3 &)buffer_write[vertex_offset_write + offset_tangents_write];
-					tangent = transform.basis.xform(tangent_read);
+					Vector3 tmp_tangent = transform.basis.xform(tangent_read);
+					store_data(VisualServer::ARRAY_NORMAL,format_read,tmp_tangent,tangent);
 				}
 			}
-
 			aabb_min.x = MIN(aabb_min.x, vertex.x);
 			aabb_min.y = MIN(aabb_min.y, vertex.y);
 			aabb_min.z = MIN(aabb_min.z, vertex.z);
