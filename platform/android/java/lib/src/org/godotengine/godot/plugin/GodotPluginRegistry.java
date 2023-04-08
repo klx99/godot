@@ -64,6 +64,12 @@ public final class GodotPluginRegistry {
 // QCode Removed <<<
 	}
 
+// QCode Added >>>
+	public void addPlugin(GodotPlugin plugin) {
+		registry.put(plugin.getPluginName(), plugin);
+	}
+// QCode Added <<<
+
 	/**
 	 * Retrieve the plugin tied to the given plugin name.
 	 * @param pluginName Name of the plugin
