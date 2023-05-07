@@ -530,10 +530,17 @@ void MeshInstance::_update_skinning() {
 			bone_weights[3] = weight_ptr[3];
 
 			const uint8_t *bones_ptr = buffer_read.ptr() + offset_bones + vertex_offset;
-			const int b0 = bones_ptr[0];
-			const int b1 = bones_ptr[1];
-			const int b2 = bones_ptr[2];
-			const int b3 = bones_ptr[3];
+			int	b0 = bones_ptr[0];
+			int	b1 = bones_ptr[1];
+			int	b2 = bones_ptr[2];
+			int	b3 = bones_ptr[3];
+			if (format_read & Mesh::ARRAY_FLAG_USE_16_BIT_BONES) {
+				const uint16_t *tmp_bones_ptr = (const uint16_t *)bones_ptr;
+				b0 = tmp_bones_ptr[0];
+				b1 = tmp_bones_ptr[1];
+				b2 = tmp_bones_ptr[2];
+				b3 = tmp_bones_ptr[3];
+			}
 
 			Transform transform;
 			transform.origin =
