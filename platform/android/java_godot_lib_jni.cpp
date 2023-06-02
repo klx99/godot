@@ -52,6 +52,8 @@
 #include <android/input.h>
 #include <unistd.h>
 
+#include "main/performance.h"
+
 static JavaClassWrapper *java_class_wrapper = nullptr;
 static OS_Android *os_android = nullptr;
 static AndroidInputHandler *input_handler = nullptr;
@@ -522,4 +524,9 @@ JNIEXPORT void JNICALL Java_org_godotengine_godot_GodotLib_onRendererPaused(JNIE
 		os_android->get_main_loop()->notification(MainLoop::NOTIFICATION_APP_PAUSED);
 	}
 }
+
+JNIEXPORT jfloat JNICALL Java_org_godotengine_godot_GodotLib_getPerformanceMonitor(JNIEnv *env, jclass clazz, jint monitor) {
+    return Performance::get_singleton()->get_monitor(static_cast<Performance::Monitor>(monitor));
+}
+
 }

@@ -220,4 +220,6 @@ public class GodotLib {
 	 * @see GodotRenderer#onActivityPaused()
 	 */
 	public static native void onRendererPaused();
+
+	public static native float getPerformanceMonitor(int monitor);
 }

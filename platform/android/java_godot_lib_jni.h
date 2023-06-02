@@ -68,6 +68,8 @@ JNIEXPORT void JNICALL Java_org_godotengine_godot_GodotLib_setVirtualKeyboardHei
 JNIEXPORT void JNICALL Java_org_godotengine_godot_GodotLib_requestPermissionResult(JNIEnv *env, jclass clazz, jstring p_permission, jboolean p_result);
 JNIEXPORT void JNICALL Java_org_godotengine_godot_GodotLib_onRendererResumed(JNIEnv *env, jclass clazz);
 JNIEXPORT void JNICALL Java_org_godotengine_godot_GodotLib_onRendererPaused(JNIEnv *env, jclass clazz);
+
+JNIEXPORT jfloat JNICALL Java_org_godotengine_godot_GodotLib_getPerformanceMonitor(JNIEnv *env, jclass clazz, jint monitor);
 }
 
 #endif // JAVA_GODOT_LIB_JNI_H
