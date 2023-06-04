@@ -168,7 +168,10 @@ android {
                 environment "ANDROID_SDK_ROOT", sdkDir
 // QCode Added <<<
                 executable sconsExecutableFile.absolutePath
-                args "--directory=${pathToRootDir}", "platform=android", "tools=${toolsFlag}", "target=${sconsTarget}", "android_arch=${selectedAbi}", "-j" + Runtime.runtime.availableProcessors()
+// QCode Modified >>>
+//                args "--directory=${pathToRootDir}", "platform=android", "tools=${toolsFlag}", "target=${sconsTarget}", "android_arch=${selectedAbi}", "-j" + Runtime.runtime.availableProcessors()
+                args 'use_static_cpp=True', "--directory=${pathToRootDir}", "platform=android", "tools=${toolsFlag}", "target=${sconsTarget}", "android_arch=${selectedAbi}", "-j" + Runtime.runtime.availableProcessors()
+// QCode Modified <<<
             }
 
             // Schedule the tasks so the generated libs are present before the aar file is packaged.
