@@ -965,6 +965,9 @@ public class Godot extends Fragment implements SensorEventListener, IDownloaderC
 				shouldQuit = false;
 			}
 		}
+// QCode Added >>>
+		if(pluginRegistry != null)
+// QCode Added <<<
 		for (GodotPlugin plugin : pluginRegistry.getAllPlugins()) {
 			if (plugin.onMainBackPressed()) {
 				shouldQuit = false;

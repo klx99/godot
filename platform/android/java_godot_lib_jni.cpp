@@ -526,7 +526,11 @@ JNIEXPORT void JNICALL Java_org_godotengine_godot_GodotLib_onRendererPaused(JNIE
 }
 
 JNIEXPORT jfloat JNICALL Java_org_godotengine_godot_GodotLib_getPerformanceMonitor(JNIEnv *env, jclass clazz, jint monitor) {
-    return Performance::get_singleton()->get_monitor(static_cast<Performance::Monitor>(monitor));
+    auto performance = Performance::get_singleton();
+    if(performance == nullptr) {
+        return 0.0f;
+    }
+    return performance->get_monitor(static_cast<Performance::Monitor>(monitor));
 }
 
 }
