@@ -185,6 +185,23 @@ android {
             withJavadocJar()
         }
     }
+
+// QCode Added >>>
+    sourceSets {
+        main {
+            java.excludes = [
+                '**/com/google/android/vending/**',
+            ]
+            aidl.excludes = [
+                '**/com/android/vending/**',
+            ]
+        }
+    }
+    buildFeatures {
+        aidl = false
+        buildConfig = true
+    }
+// QCode Added <<<
 }
 
 def getSconsTaskName(String flavor, String buildType, String abi) {

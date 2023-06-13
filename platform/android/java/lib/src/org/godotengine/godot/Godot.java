@@ -80,13 +80,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.vending.expansion.downloader.DownloadProgressInfo;
-import com.google.android.vending.expansion.downloader.DownloaderClientMarshaller;
-import com.google.android.vending.expansion.downloader.DownloaderServiceMarshaller;
-import com.google.android.vending.expansion.downloader.Helpers;
-import com.google.android.vending.expansion.downloader.IDownloaderClient;
-import com.google.android.vending.expansion.downloader.IDownloaderService;
-import com.google.android.vending.expansion.downloader.IStub;
+// QCode Removed >>>
+//import com.google.android.vending.expansion.downloader.DownloadProgressInfo;
+//import com.google.android.vending.expansion.downloader.DownloaderClientMarshaller;
+//import com.google.android.vending.expansion.downloader.DownloaderServiceMarshaller;
+//import com.google.android.vending.expansion.downloader.Helpers;
+//import com.google.android.vending.expansion.downloader.IDownloaderClient;
+//import com.google.android.vending.expansion.downloader.IDownloaderService;
+//import com.google.android.vending.expansion.downloader.IStub;
+// QCode Removed <<<
 
 import org.godotengine.godot.input.GodotEditText;
 import org.godotengine.godot.io.directory.DirectoryAccessHandler;
@@ -110,15 +112,20 @@ import java.util.Locale;
 
 import javax.microedition.khronos.opengles.GL10;
 
-public class Godot extends Fragment implements SensorEventListener, IDownloaderClient {
+// QCode Modified >>>
+//public class Godot extends Fragment implements SensorEventListener, IDownloaderClient {
+public class Godot extends Fragment implements SensorEventListener {
+// QCode Modified <<<
 	static final int MAX_SINGLETONS = 64;
-	private IStub mDownloaderClientStub;
-	private TextView mStatusText;
-	private TextView mProgressFraction;
-	private TextView mProgressPercent;
-	private TextView mAverageSpeed;
-	private TextView mTimeRemaining;
-	private ProgressBar mPB;
+// QCode Removed >>>
+//	private IStub mDownloaderClientStub;
+//	private TextView mStatusText;
+//	private TextView mProgressFraction;
+//	private TextView mProgressPercent;
+//	private TextView mAverageSpeed;
+//	private TextView mTimeRemaining;
+//	private ProgressBar mPB;
+// QCode Removed <<<
 	private ClipboardManager mClipboard;
 
 	private View mDashboard;
@@ -151,12 +158,14 @@ public class Godot extends Fragment implements SensorEventListener, IDownloaderC
 		return mCurrentIntent;
 	}
 
-	private void setState(int newState) {
-		if (mState != newState) {
-			mState = newState;
-			mStatusText.setText(Helpers.getDownloaderStringResourceIDFromState(newState));
-		}
-	}
+// QCode Removed >>>
+//	private void setState(int newState) {
+//		if (mState != newState) {
+//			mState = newState;
+//			mStatusText.setText(Helpers.getDownloaderStringResourceIDFromState(newState));
+//		}
+//	}
+// QCode Removed <<<
 
 	private void setButtonPausedState(boolean paused) {
 		mStatePaused = paused;
@@ -597,11 +606,13 @@ public class Godot extends Fragment implements SensorEventListener, IDownloaderC
 		godot_initialized = true;
 	}
 
-	@Override
-	public void onServiceConnected(Messenger m) {
-		IDownloaderService remoteService = DownloaderServiceMarshaller.CreateProxy(m);
-		remoteService.onClientUpdated(mDownloaderClientStub.getMessenger());
-	}
+// QCode Removed >>>
+//	@Override
+//	public void onServiceConnected(Messenger m) {
+//		IDownloaderService remoteService = DownloaderServiceMarshaller.CreateProxy(m);
+//		remoteService.onClientUpdated(mDownloaderClientStub.getMessenger());
+//	}
+// QCode Removed <<<
 
 	@Override
 	public void onCreate(Bundle icicle) {
@@ -674,12 +685,14 @@ public class Godot extends Fragment implements SensorEventListener, IDownloaderC
 			}
 
 			// Build the full path to the app's expansion files
-			try {
-				expansion_pack_path = Helpers.getSaveFilePath(getContext());
-				expansion_pack_path += "/main." + activity.getPackageManager().getPackageInfo(activity.getPackageName(), 0).versionCode + "." + activity.getPackageName() + ".obb";
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+// QCode Removed >>>
+//			try {
+//				expansion_pack_path = Helpers.getSaveFilePath(getContext());
+//				expansion_pack_path += "/main." + activity.getPackageManager().getPackageInfo(activity.getPackageName(), 0).versionCode + "." + activity.getPackageName() + ".obb";
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+// QCode Removed <<<
 
 			File f = new File(expansion_pack_path);
 
@@ -703,24 +716,26 @@ public class Godot extends Fragment implements SensorEventListener, IDownloaderC
 				PendingIntent pendingIntent = PendingIntent.getActivity(activity, 0,
 						notifierIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-				int startResult;
-				try {
-					startResult = DownloaderClientMarshaller.startDownloadServiceIfRequired(
-							getContext(),
-							pendingIntent,
-							GodotDownloaderService.class);
-
-					if (startResult != DownloaderClientMarshaller.NO_DOWNLOAD_REQUIRED) {
-						// This is where you do set up to display the download
-						// progress (next step in onCreateView)
-						mDownloaderClientStub = DownloaderClientMarshaller.CreateStub(this,
-								GodotDownloaderService.class);
-
-						return;
-					}
-				} catch (NameNotFoundException e) {
-					// TODO Auto-generated catch block
-				}
+// QCode Removed >>>
+//				int startResult;
+//				try {
+//					startResult = DownloaderClientMarshaller.startDownloadServiceIfRequired(
+//							getContext(),
+//							pendingIntent,
+//							GodotDownloaderService.class);
+//
+//					if (startResult != DownloaderClientMarshaller.NO_DOWNLOAD_REQUIRED) {
+//						// This is where you do set up to display the download
+//						// progress (next step in onCreateView)
+//						mDownloaderClientStub = DownloaderClientMarshaller.CreateStub(this,
+//								GodotDownloaderService.class);
+//
+//						return;
+//					}
+//				} catch (NameNotFoundException e) {
+//					// TODO Auto-generated catch block
+//				}
+// QCode Removed <<<
 			}
 		}
 
@@ -731,22 +746,24 @@ public class Godot extends Fragment implements SensorEventListener, IDownloaderC
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle) {
-		if (mDownloaderClientStub != null) {
-			View downloadingExpansionView =
-					inflater.inflate(R.layout.downloading_expansion, container, false);
-			mPB = (ProgressBar)downloadingExpansionView.findViewById(R.id.progressBar);
-			mStatusText = (TextView)downloadingExpansionView.findViewById(R.id.statusText);
-			mProgressFraction = (TextView)downloadingExpansionView.findViewById(R.id.progressAsFraction);
-			mProgressPercent = (TextView)downloadingExpansionView.findViewById(R.id.progressAsPercentage);
-			mAverageSpeed = (TextView)downloadingExpansionView.findViewById(R.id.progressAverageSpeed);
-			mTimeRemaining = (TextView)downloadingExpansionView.findViewById(R.id.progressTimeRemaining);
-			mDashboard = downloadingExpansionView.findViewById(R.id.downloaderDashboard);
-			mCellMessage = downloadingExpansionView.findViewById(R.id.approveCellular);
-			mPauseButton = (Button)downloadingExpansionView.findViewById(R.id.pauseButton);
-			mWiFiSettingsButton = (Button)downloadingExpansionView.findViewById(R.id.wifiSettingsButton);
-
-			return downloadingExpansionView;
-		}
+// QCode Removed >>>
+//		if (mDownloaderClientStub != null) {
+//			View downloadingExpansionView =
+//					inflater.inflate(R.layout.downloading_expansion, container, false);
+//			mPB = (ProgressBar)downloadingExpansionView.findViewById(R.id.progressBar);
+//			mStatusText = (TextView)downloadingExpansionView.findViewById(R.id.statusText);
+//			mProgressFraction = (TextView)downloadingExpansionView.findViewById(R.id.progressAsFraction);
+//			mProgressPercent = (TextView)downloadingExpansionView.findViewById(R.id.progressAsPercentage);
+//			mAverageSpeed = (TextView)downloadingExpansionView.findViewById(R.id.progressAverageSpeed);
+//			mTimeRemaining = (TextView)downloadingExpansionView.findViewById(R.id.progressTimeRemaining);
+//			mDashboard = downloadingExpansionView.findViewById(R.id.downloaderDashboard);
+//			mCellMessage = downloadingExpansionView.findViewById(R.id.approveCellular);
+//			mPauseButton = (Button)downloadingExpansionView.findViewById(R.id.pauseButton);
+//			mWiFiSettingsButton = (Button)downloadingExpansionView.findViewById(R.id.wifiSettingsButton);
+//
+//			return downloadingExpansionView;
+//		}
+// QCode Removed <<<
 
 		return containerLayout;
 	}
@@ -773,9 +790,11 @@ public class Godot extends Fragment implements SensorEventListener, IDownloaderC
 		activityResumed = false;
 
 		if (!godot_initialized) {
-			if (null != mDownloaderClientStub) {
-				mDownloaderClientStub.disconnect(getActivity());
-			}
+// QCode Removed >>>
+//			if (null != mDownloaderClientStub) {
+//				mDownloaderClientStub.disconnect(getActivity());
+//			}
+// QCode Removed <<<
 			return;
 		}
 		mView.onPause();
@@ -814,9 +833,11 @@ public class Godot extends Fragment implements SensorEventListener, IDownloaderC
 		super.onResume();
 		activityResumed = true;
 		if (!godot_initialized) {
-			if (null != mDownloaderClientStub) {
-				mDownloaderClientStub.connect(getActivity());
-			}
+// QCode Removed >>>
+//			if (null != mDownloaderClientStub) {
+//				mDownloaderClientStub.connect(getActivity());
+//			}
+// QCode Removed <<<
 			return;
 		}
 
@@ -1063,94 +1084,96 @@ public class Godot extends Fragment implements SensorEventListener, IDownloaderC
 	 * to show the state as being indeterminate at times. This sample can be
 	 * considered a guideline.
 	 */
-	@Override
-	public void onDownloadStateChanged(int newState) {
-		setState(newState);
-		boolean showDashboard = true;
-		boolean showCellMessage = false;
-		boolean paused;
-		boolean indeterminate;
-		switch (newState) {
-			case IDownloaderClient.STATE_IDLE:
-				// STATE_IDLE means the service is listening, so it's
-				// safe to start making remote service calls.
-				paused = false;
-				indeterminate = true;
-				break;
-			case IDownloaderClient.STATE_CONNECTING:
-			case IDownloaderClient.STATE_FETCHING_URL:
-				showDashboard = true;
-				paused = false;
-				indeterminate = true;
-				break;
-			case IDownloaderClient.STATE_DOWNLOADING:
-				paused = false;
-				showDashboard = true;
-				indeterminate = false;
-				break;
-
-			case IDownloaderClient.STATE_FAILED_CANCELED:
-			case IDownloaderClient.STATE_FAILED:
-			case IDownloaderClient.STATE_FAILED_FETCHING_URL:
-			case IDownloaderClient.STATE_FAILED_UNLICENSED:
-				paused = true;
-				showDashboard = false;
-				indeterminate = false;
-				break;
-			case IDownloaderClient.STATE_PAUSED_NEED_CELLULAR_PERMISSION:
-			case IDownloaderClient.STATE_PAUSED_WIFI_DISABLED_NEED_CELLULAR_PERMISSION:
-				showDashboard = false;
-				paused = true;
-				indeterminate = false;
-				showCellMessage = true;
-				break;
-
-			case IDownloaderClient.STATE_PAUSED_BY_REQUEST:
-				paused = true;
-				indeterminate = false;
-				break;
-			case IDownloaderClient.STATE_PAUSED_ROAMING:
-			case IDownloaderClient.STATE_PAUSED_SDCARD_UNAVAILABLE:
-				paused = true;
-				indeterminate = false;
-				break;
-			case IDownloaderClient.STATE_COMPLETED:
-				showDashboard = false;
-				paused = false;
-				indeterminate = false;
-				initializeGodot();
-				return;
-			default:
-				paused = true;
-				indeterminate = true;
-				showDashboard = true;
-		}
-		int newDashboardVisibility = showDashboard ? View.VISIBLE : View.GONE;
-		if (mDashboard.getVisibility() != newDashboardVisibility) {
-			mDashboard.setVisibility(newDashboardVisibility);
-		}
-		int cellMessageVisibility = showCellMessage ? View.VISIBLE : View.GONE;
-		if (mCellMessage.getVisibility() != cellMessageVisibility) {
-			mCellMessage.setVisibility(cellMessageVisibility);
-		}
-
-		mPB.setIndeterminate(indeterminate);
-		setButtonPausedState(paused);
-	}
-
-	@Override
-	public void onDownloadProgress(DownloadProgressInfo progress) {
-		mAverageSpeed.setText(getString(R.string.kilobytes_per_second,
-				Helpers.getSpeedString(progress.mCurrentSpeed)));
-		mTimeRemaining.setText(getString(R.string.time_remaining,
-				Helpers.getTimeRemaining(progress.mTimeRemaining)));
-
-		mPB.setMax((int)(progress.mOverallTotal >> 8));
-		mPB.setProgress((int)(progress.mOverallProgress >> 8));
-		mProgressPercent.setText(String.format(Locale.ENGLISH, "%d %%", progress.mOverallProgress * 100 / progress.mOverallTotal));
-		mProgressFraction.setText(Helpers.getDownloadProgressString(progress.mOverallProgress,
-				progress.mOverallTotal));
-	}
+// QCode Removed >>>
+//	@Override
+//	public void onDownloadStateChanged(int newState) {
+//		setState(newState);
+//		boolean showDashboard = true;
+//		boolean showCellMessage = false;
+//		boolean paused;
+//		boolean indeterminate;
+//		switch (newState) {
+//			case IDownloaderClient.STATE_IDLE:
+//				// STATE_IDLE means the service is listening, so it's
+//				// safe to start making remote service calls.
+//				paused = false;
+//				indeterminate = true;
+//				break;
+//			case IDownloaderClient.STATE_CONNECTING:
+//			case IDownloaderClient.STATE_FETCHING_URL:
+//				showDashboard = true;
+//				paused = false;
+//				indeterminate = true;
+//				break;
+//			case IDownloaderClient.STATE_DOWNLOADING:
+//				paused = false;
+//				showDashboard = true;
+//				indeterminate = false;
+//				break;
+//
+//			case IDownloaderClient.STATE_FAILED_CANCELED:
+//			case IDownloaderClient.STATE_FAILED:
+//			case IDownloaderClient.STATE_FAILED_FETCHING_URL:
+//			case IDownloaderClient.STATE_FAILED_UNLICENSED:
+//				paused = true;
+//				showDashboard = false;
+//				indeterminate = false;
+//				break;
+//			case IDownloaderClient.STATE_PAUSED_NEED_CELLULAR_PERMISSION:
+//			case IDownloaderClient.STATE_PAUSED_WIFI_DISABLED_NEED_CELLULAR_PERMISSION:
+//				showDashboard = false;
+//				paused = true;
+//				indeterminate = false;
+//				showCellMessage = true;
+//				break;
+//
+//			case IDownloaderClient.STATE_PAUSED_BY_REQUEST:
+//				paused = true;
+//				indeterminate = false;
+//				break;
+//			case IDownloaderClient.STATE_PAUSED_ROAMING:
+//			case IDownloaderClient.STATE_PAUSED_SDCARD_UNAVAILABLE:
+//				paused = true;
+//				indeterminate = false;
+//				break;
+//			case IDownloaderClient.STATE_COMPLETED:
+//				showDashboard = false;
+//				paused = false;
+//				indeterminate = false;
+//				initializeGodot();
+//				return;
+//			default:
+//				paused = true;
+//				indeterminate = true;
+//				showDashboard = true;
+//		}
+//		int newDashboardVisibility = showDashboard ? View.VISIBLE : View.GONE;
+//		if (mDashboard.getVisibility() != newDashboardVisibility) {
+//			mDashboard.setVisibility(newDashboardVisibility);
+//		}
+//		int cellMessageVisibility = showCellMessage ? View.VISIBLE : View.GONE;
+//		if (mCellMessage.getVisibility() != cellMessageVisibility) {
+//			mCellMessage.setVisibility(cellMessageVisibility);
+//		}
+//
+//		mPB.setIndeterminate(indeterminate);
+//		setButtonPausedState(paused);
+//	}
+//
+//	@Override
+//	public void onDownloadProgress(DownloadProgressInfo progress) {
+//		mAverageSpeed.setText(getString(R.string.kilobytes_per_second,
+//				Helpers.getSpeedString(progress.mCurrentSpeed)));
+//		mTimeRemaining.setText(getString(R.string.time_remaining,
+//				Helpers.getTimeRemaining(progress.mTimeRemaining)));
+//
+//		mPB.setMax((int)(progress.mOverallTotal >> 8));
+//		mPB.setProgress((int)(progress.mOverallProgress >> 8));
+//		mProgressPercent.setText(String.format(Locale.ENGLISH, "%d %%", progress.mOverallProgress * 100 / progress.mOverallTotal));
+//		mProgressFraction.setText(Helpers.getDownloadProgressString(progress.mOverallProgress,
+//				progress.mOverallTotal));
+//	}
+// QCode Removed <<<
 
 	public void initInputDevices() {
 		mView.initInputDevices();
