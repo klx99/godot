@@ -163,15 +163,93 @@ android {
             // Creating gradle task to generate the native libraries for the selected abi.
             def taskName = getSconsTaskName(flavorName, buildType, selectedAbi)
             tasks.create(name: taskName, type: Exec) {
+                executable sconsExecutableFile.absolutePath
+                args "--directory=${pathToRootDir}", "platform=android", "tools=${toolsFlag}", "target=${sconsTarget}", "android_arch=${selectedAbi}", "-j" + Runtime.runtime.availableProcessors()
 // QCode Added >>>
+                args 'use_static_cpp=True' // 静态c++库
+                args 'optimize=speed' // Optimization type (speed|size|none)
+                args 'production=True' // Set defaults to build Godot for use in production
+                args 'use_lto=True' // 编译时优化技术
+                args 'deprecated=False' // Enable deprecated features
+                args 'fast_unsafe=True' // Enable unsafe options for faster rebuilds
+//                args 'disable_advanced_gui=True' // Disable advanced GUI nodes and behaviors
+                args 'builtin_bullet=False' // Use the built-in Bullet library
+                args 'builtin_certs=False' // Use the built-in SSL certificates bundles
+                args 'builtin_embree=False' // Intel 开发的高性能光线追踪渲染库
+                args 'builtin_enet=False' // 轻量级的可靠 UDP 数据包传输库
+                args 'builtin_freetype=False' // 开源的字体渲染引擎
+                args 'builtin_libogg=False' // 对 Ogg 格式音频进行编码和解码
+//                args 'builtin_libpng=False' // libpng 图像处理库
+                args 'builtin_libtheora=False' // Theora 格式视频进行编码和解码
+                args 'builtin_libvorbis=False' // Vorbis 格式音频进行编码和解码
+                args 'builtin_libvpx=False' // VP8 和 VP9 格式视频进行编码和解码
+                args 'builtin_libwebp=False' // WebP 格式图像进行编码和解码
+                args 'builtin_wslay=False' // WebSocket 协议实现库
+                args 'builtin_mbedtls=False' // 安全通信协议和加密算法
+                args 'builtin_miniupnpc=False' // Universal Plug and Play (UPnP) 客户端库
+                args 'builtin_opus=False' // 对音频数据进行高效的压缩和解压缩
+//                args 'builtin_pcre2=False' // 正则表达式库
+//                args 'builtin_pcre2_with_jit=False' // 包含 Just-In-Time (JIT) 编译支持
+//                args 'builtin_recast=False' // 导航网格生成库，用于在游戏中创建可导航的三维环境，支持路径寻找和避障等导航功能, navigation依赖
+//                args 'builtin_rvo2=False' // 模拟人群行为和路径规划的开源库, navigation依赖
+//                args 'builtin_squish=False' // 用于压缩和解压缩纹理图像的开源库
+//                args 'builtin_xatlas=False' // 自动将纹理 UV 坐标打包到纹理图集中的开源库
+//                args 'builtin_zlib=False'
+//                args 'builtin_zstd=False' // 高性能数据压缩库，旨在提供快速的压缩和解压缩速度
+                args 'pulseaudio=False' // 音频输入和输出的管理和处理
+                args 'separate_debug_symbols=True' // 将调试符号（debug symbols）与可执行文件或库文件分离存储
+                args 'touch=False' // Enable touch events
+                args 'module_bmp_enabled=False'
+                args 'module_bullet_enabled=False' // 模拟物体之间的碰撞、重力、运动、约束等物理行为
+//                args 'module_camera_enabled=False' // 创建和控制摄像机对象
+                args 'module_csg_enabled=False' // 通过组合基本几何形状来构建复杂的三维几何体
+                args 'module_cvtt_enabled=False' // 用于生成和处理各种压缩纹理格式，如 BC1、BC3、BC7 等
+                args 'module_dds_enabled=False' // 支持多种压缩和未压缩的纹理格式，如 DXT1、DXT5、RGBA8
+                args 'module_denoise_enabled=False' // 图像降噪的工具，减少渲染图像中的噪点和伪影，提高图像质量
+                args 'module_enet_enabled=False' // 可靠UDP网络库
+//                args 'module_etc_enabled=False' // 加载和使用 ETC 压缩纹理
+                args 'module_fbx_enabled=False' // FBX 是一种常见的三维模型和动画文件格式
+                args 'module_freetype_enabled=False'
+//                args 'module_gdnative_enabled=False'
+//                args 'module_gdscript_enabled=False'
+                args 'module_gltf_enabled=False' // GLTF 文件格式，用于传输和加载三维模型和场景数据
+                args 'module_gridmap_enabled=False' // 用于创建和管理网格化的游戏世界的模块
+                args 'module_hdr_enabled=False' // 用于捕捉和显示更高动态范围的图像
+                args 'module_jpg_enabled=False'
+                args 'module_jsonrpc_enabled=False' // 基于 JSON 格式的远程过程调用协议
+                args 'module_lightmapper_cpu_enabled=False' // CPU 光照贴图器（Lightmapper）模块
+                args 'module_mbedtls_enabled=False' // 加密和安全通信库
+                args 'module_minimp3_enabled=False' // MP3 音频解码库
+                args 'module_mobile_vr_enabled=False' // 移动 VR 模块
+                args 'module_mono_enabled=False' // 用于执行和管理基于.NET的程序
+//                args 'module_navigation_enabled=False' // Crash
+                args 'module_ogg_enabled=False' // Ogg Vorbis 是一种音频压缩格式
+                args 'module_opensimplex_enabled=False' //  OpenSimplex 噪声模块
+                args 'module_opus_enabled=False' // 一种音频编解码器
+                args 'module_pvr_enabled=False'
+                args 'module_raycast_enabled=False' // 射线投射是一种常用的技术，用于在游戏中进行碰撞检测、拾取物体、射线追踪和环境交互等
+                args 'module_regex_enabled=False' // 正则表达式模块
+                args 'module_squish_enabled=False' // 一个用于图像压缩和纹理压缩的开源库
+                args 'module_stb_vorbis_enabled=False' // Vorbis 音频解码器库
+                args 'module_svg_enabled=False'
+                args 'module_tga_enabled=False' // 一种图像文件格式，用于存储位图图像。
+                args 'module_theora_enabled=False' // 一种视频编码格式
+                args 'module_tinyexr_enabled=False' //  EXR图像文件解析器和编写器库
+                args 'module_upnp_enabled=False' // UPnP模块
+                args 'module_vhacd_enabled=False' // 用于进行凸体分解的开源库
+                args 'module_visual_script_enabled=False' // Visual Script 模块
+                args 'module_vorbis_enabled=False' // Vorbis 是一种音频编码格式，适用于高质量的音频压缩和解码
+                args 'module_webm_enabled=False'
+                args 'module_webp_enabled=False'
+                args 'module_webrtc_enabled=False'
+                args 'module_websocket_enabled=False'
+                args 'module_webxr_enabled=False'
+                args 'module_xatlas_unwrap_enabled=False' // 用于自动展开纹理 UV 坐标
+
+                println "Godot Scons args: ${args}"
                 def sdkDir = android.getSdkDirectory().getAbsolutePath()
                 environment "ANDROID_SDK_ROOT", sdkDir
 // QCode Added <<<
-                executable sconsExecutableFile.absolutePath
-// QCode Modified >>>
-//                args "--directory=${pathToRootDir}", "platform=android", "tools=${toolsFlag}", "target=${sconsTarget}", "android_arch=${selectedAbi}", "-j" + Runtime.runtime.availableProcessors()
-                args 'use_static_cpp=True', "--directory=${pathToRootDir}", "platform=android", "tools=${toolsFlag}", "target=${sconsTarget}", "android_arch=${selectedAbi}", "-j" + Runtime.runtime.availableProcessors()
-// QCode Modified <<<
             }
 
             // Schedule the tasks so the generated libs are present before the aar file is packaged.
