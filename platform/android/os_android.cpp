@@ -115,6 +115,12 @@ void OS_Android::initialize_core() {
 	}
 #endif
 	FileAccess::make_default<FileAccessUnix>(FileAccess::ACCESS_USERDATA);
+// QCode Added >>>
+// 解决不能读取/data/local/tmp下pck文件的问题。
+	if (use_apk_expansion) {
+		FileAccess::make_default<FileAccessUnix>(FileAccess::ACCESS_FILESYSTEM);
+	} else
+// QCode Added <<<
 	FileAccess::make_default<FileAccessFilesystemJAndroid>(FileAccess::ACCESS_FILESYSTEM);
 
 #ifdef TOOLS_ENABLED
