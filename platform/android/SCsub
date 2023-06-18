@@ -65,7 +65,7 @@ if lib_arch_dir != "":
     env_android.Command(
 # QCode Modified >>>
 #        out_dir + "/libgodot_android.so", "#bin/libgodot" + env["SHLIBSUFFIX"], Move("$TARGET", "$SOURCE")
-        out_dir + "/libtdvcore.so", "#bin/libgodot" + env["SHLIBSUFFIX"], Move("$TARGET", "$SOURCE")
+        out_dir + "/libtdcore.so", "#bin/libgodot" + env["SHLIBSUFFIX"], Move("$TARGET", "$SOURCE")
 # QCode Modified <<<
     )
 

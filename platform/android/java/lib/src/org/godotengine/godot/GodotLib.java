@@ -49,7 +49,7 @@ public class GodotLib {
 	static {
 // QCode Modified >>>
 //		System.loadLibrary("godot_android");
-		System.loadLibrary("tdvcore");
+		System.loadLibrary("tdcore");
 // QCode Modified <<<
 	}
 

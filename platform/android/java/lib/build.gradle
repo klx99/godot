@@ -172,7 +172,8 @@ android {
                 args 'use_lto=True' // 编译时优化技术
                 args 'deprecated=False' // Enable deprecated features
                 args 'fast_unsafe=True' // Enable unsafe options for faster rebuilds
-//                args 'disable_advanced_gui=True' // Disable advanced GUI nodes and behaviors
+                args 'minizip=False' //
+//                args 'disable_advanced_gui=True' // Disable advanced GUI nodes and behaviors, 数字人依赖
                 args 'builtin_bullet=False' // Use the built-in Bullet library
                 args 'builtin_certs=False' // Use the built-in SSL certificates bundles
                 args 'builtin_embree=False' // Intel 开发的高性能光线追踪渲染库
@@ -192,10 +193,10 @@ android {
 //                args 'builtin_pcre2_with_jit=False' // 包含 Just-In-Time (JIT) 编译支持
 //                args 'builtin_recast=False' // 导航网格生成库，用于在游戏中创建可导航的三维环境，支持路径寻找和避障等导航功能, navigation依赖
 //                args 'builtin_rvo2=False' // 模拟人群行为和路径规划的开源库, navigation依赖
-//                args 'builtin_squish=False' // 用于压缩和解压缩纹理图像的开源库
-//                args 'builtin_xatlas=False' // 自动将纹理 UV 坐标打包到纹理图集中的开源库
-//                args 'builtin_zlib=False'
-//                args 'builtin_zstd=False' // 高性能数据压缩库，旨在提供快速的压缩和解压缩速度
+                args 'builtin_squish=False' // 用于压缩和解压缩纹理图像的开源库
+                args 'builtin_xatlas=False' // 自动将纹理 UV 坐标打包到纹理图集中的开源库
+                args 'builtin_zlib=False'
+//                args 'builtin_zstd=False' // 高性能数据压缩库，旨在提供快速的压缩和解压缩速度, core依赖
                 args 'pulseaudio=False' // 音频输入和输出的管理和处理
                 args 'separate_debug_symbols=True' // 将调试符号（debug symbols）与可执行文件或库文件分离存储
                 args 'touch=False' // Enable touch events

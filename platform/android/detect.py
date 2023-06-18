@@ -204,7 +204,7 @@ def configure(env):
     env.Append(LINKFLAGS="-Wl,--gc-sections -Wl,--no-undefined -Wl,-z,now".split())
 # QCode Modified >>>
 #    env.Append(LINKFLAGS="-Wl,-soname,libgodot_android.so")
-    env.Append(LINKFLAGS="-Wl,-soname,libtdvcore.so")
+    env.Append(LINKFLAGS="-Wl,-soname,libtdcore.so")
     env.Append(LINKFLAGS="-static-libstdc++")
 # QCode Modified <<<
 
