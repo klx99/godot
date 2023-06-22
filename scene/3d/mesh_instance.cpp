@@ -39,6 +39,8 @@
 #include "servers/visual/visual_server_globals.h"
 #include "skeleton.h"
 
+// QCode Added >>>
+// 解决皮肤显示错误的bug。
 static _ALWAYS_INLINE_ int8_t make_int8(float f)
 {
 	return ((int8_t)f)& 0xff;
@@ -104,6 +106,7 @@ static _ALWAYS_INLINE_ void store_data(VS::ArrayType type,const uint32_t format,
 			break;
 	}
 }
+// QCode Added <<<
 
 bool MeshInstance::_set(const StringName &p_name, const Variant &p_value) {
 	//this is not _too_ bad performance wise, really. it only arrives here if the property was not set anywhere else.
@@ -530,6 +533,12 @@ void MeshInstance::_update_skinning() {
 			bone_weights[3] = weight_ptr[3];
 
 			const uint8_t *bones_ptr = buffer_read.ptr() + offset_bones + vertex_offset;
+// QCode Modified >>>
+// 解决软骨骼显示错误的bug。
+			// const int b0 = bones_ptr[0];
+			// const int b1 = bones_ptr[1];
+			// const int b2 = bones_ptr[2];
+			// const int b3 = bones_ptr[3];
 			int	b0 = bones_ptr[0];
 			int	b1 = bones_ptr[1];
 			int	b2 = bones_ptr[2];
@@ -541,6 +550,7 @@ void MeshInstance::_update_skinning() {
 				b2 = tmp_bones_ptr[2];
 				b3 = tmp_bones_ptr[3];
 			}
+// QCode Modified <<<
 
 			Transform transform;
 			transform.origin =
@@ -565,18 +575,30 @@ void MeshInstance::_update_skinning() {
 					transform.basis.transpose();
 				}
 
+// QCode Modified >>>
+// 解决皮肤显示错误的bug。
+				// const Vector3 &normal_read = (const Vector3 &)buffer_read[vertex_offset + offset_normals];
+				// Vector3 &normal = (Vector3 &)buffer_write[vertex_offset_write + offset_normals_write];
+				// normal = transform.basis.xform(normal_read);
 				const Vector3 &tmp_normal_read = (const Vector3 &)buffer_read[vertex_offset + offset_normals];
 				Vector3 normal_read = fetch_data(VisualServer::ARRAY_NORMAL,format_read,tmp_normal_read);
-				Vector3 &normal = (Vector3 &)buffer_write[vertex_offset_write + offset_normals_write]; 
+				Vector3 &normal = (Vector3 &)buffer_write[vertex_offset_write + offset_normals_write];
 				Vector3 tmp_normal = transform.basis.xform(normal_read);
 				store_data(VisualServer::ARRAY_NORMAL,format_read,tmp_normal,normal);
+// QCode Modified <<<
 
 				if (transform_tangents) {
+// QCode Modified >>>
+// 解决皮肤显示错误的bug。
+					// const Vector3 &tangent_read = (const Vector3 &)buffer_read[vertex_offset + offset_tangents];
+					// Vector3 &tangent = (Vector3 &)buffer_write[vertex_offset_write + offset_tangents_write];
+					// tangent = transform.basis.xform(tangent_read);
 					const Vector3 &tmp_tangent_read = (const Vector3 &)buffer_read[vertex_offset + offset_tangents];
 					Vector3 tangent_read = fetch_data(VisualServer::ARRAY_NORMAL,format_read,tmp_tangent_read);
 					Vector3 &tangent = (Vector3 &)buffer_write[vertex_offset_write + offset_tangents_write];
 					Vector3 tmp_tangent = transform.basis.xform(tangent_read);
 					store_data(VisualServer::ARRAY_NORMAL,format_read,tmp_tangent,tangent);
+// QCode Modified <<<
 				}
 			}
 			aabb_min.x = MIN(aabb_min.x, vertex.x);
