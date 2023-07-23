@@ -64,7 +64,7 @@ real_t ConvexPolygonShape::get_enclosing_radius() const {
 }
 
 void ConvexPolygonShape::_update_shape() {
-	PhysicsServer::get_singleton()->shape_set_data(get_shape(), points);
+	if(Enable3DPhysics())PhysicsServer::get_singleton()->shape_set_data(get_shape(), points);
 	Shape::_update_shape();
 }
 
@@ -86,5 +86,6 @@ void ConvexPolygonShape::_bind_methods() {
 }
 
 ConvexPolygonShape::ConvexPolygonShape() :
-		Shape(RID_PRIME(PhysicsServer::get_singleton()->shape_create(PhysicsServer::SHAPE_CONVEX_POLYGON))) {
+		Shape(RID_PRIME(Enable3DPhysics()?PhysicsServer::get_singleton()->shape_create(PhysicsServer::SHAPE_CONVEX_POLYGON):RID()))
+{
 }

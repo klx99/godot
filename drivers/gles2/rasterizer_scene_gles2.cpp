@@ -53,6 +53,7 @@
 #endif
 #endif
 
+bool EnableShadow();
 static const GLenum _cube_side_enum[6] = {
 
 	GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
@@ -65,6 +66,7 @@ static const GLenum _cube_side_enum[6] = {
 };
 
 void RasterizerSceneGLES2::directional_shadow_create() {
+	if(!EnableShadow())return;
 	if (directional_shadow.fbo) {
 		// Erase existing directional shadow texture to recreate it.
 		glDeleteTextures(1, &directional_shadow.depth);
@@ -140,6 +142,7 @@ RID RasterizerSceneGLES2::shadow_atlas_create() {
 }
 
 void RasterizerSceneGLES2::shadow_atlas_set_size(RID p_atlas, int p_size) {
+	if(!EnableShadow())return;
 	ShadowAtlas *shadow_atlas = shadow_atlas_owner.getornull(p_atlas);
 	ERR_FAIL_COND(!shadow_atlas);
 	ERR_FAIL_COND(p_size < 0);

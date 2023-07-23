@@ -118,6 +118,10 @@ PFNGLFRAMEBUFFERTEXTURE2DMULTISAMPLEEXTPROC glFramebufferTexture2DMultisampleEXT
 #define GL_MAX_SAMPLES 0x8D57
 #endif //!GLES_OVER_GL
 
+bool EnableShadow()
+{
+	return false;
+}
 void RasterizerStorageGLES2::bind_quad_array() const {
 	glBindBuffer(GL_ARRAY_BUFFER, resources.quadie);
 	glVertexAttribPointer(VS::ARRAY_VERTEX, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4, nullptr);
@@ -2643,7 +2647,6 @@ PoolVector<float> RasterizerStorageGLES2::mesh_get_blend_shape_values(RID p_mesh
 
 	return mesh->blend_shape_values;
 }
-
 void RasterizerStorageGLES2::mesh_surface_update_region(RID p_mesh, int p_surface, int p_offset, const PoolVector<uint8_t> &p_data) {
 	Mesh *mesh = mesh_owner.getornull(p_mesh);
 
@@ -6407,7 +6410,7 @@ void RasterizerStorageGLES2::initialize() {
 	}
 
 	//picky requirements for these
-	config.support_shadow_cubemaps = config.support_depth_texture && config.support_write_depth && config.support_depth_cubemaps;
+	config.support_shadow_cubemaps = EnableShadow()?config.support_depth_texture && config.support_write_depth && config.support_depth_cubemaps:false;
 	if (!config.support_shadow_cubemaps) {
 		print_verbose("OmniLight cubemap shadows are not supported by this GPU. Falling back to dual paraboloid shadows for all omni lights (faster but less precise).");
 	}

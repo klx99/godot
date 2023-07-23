@@ -55,18 +55,18 @@ void CollisionObject::_notification(int p_what) {
 
 		case NOTIFICATION_ENTER_WORLD: {
 			if (area) {
-				PhysicsServer::get_singleton()->area_set_transform(rid, get_global_transform());
+				if(Enable3DPhysics())PhysicsServer::get_singleton()->area_set_transform(rid, get_global_transform());
 			} else {
-				PhysicsServer::get_singleton()->body_set_state(rid, PhysicsServer::BODY_STATE_TRANSFORM, get_global_transform());
+				if(Enable3DPhysics())PhysicsServer::get_singleton()->body_set_state(rid, PhysicsServer::BODY_STATE_TRANSFORM, get_global_transform());
 			}
 
 			Ref<World> world_ref = get_world();
 			ERR_FAIL_COND(!world_ref.is_valid());
 			RID space = world_ref->get_space();
 			if (area) {
-				PhysicsServer::get_singleton()->area_set_space(rid, space);
+				if(Enable3DPhysics())PhysicsServer::get_singleton()->area_set_space(rid, space);
 			} else {
-				PhysicsServer::get_singleton()->body_set_space(rid, space);
+				if(Enable3DPhysics())PhysicsServer::get_singleton()->body_set_space(rid, space);
 			}
 			_update_pickable();
 			//get space
@@ -78,9 +78,9 @@ void CollisionObject::_notification(int p_what) {
 			}
 
 			if (area) {
-				PhysicsServer::get_singleton()->area_set_transform(rid, get_global_transform());
+				if(Enable3DPhysics())PhysicsServer::get_singleton()->area_set_transform(rid, get_global_transform());
 			} else {
-				PhysicsServer::get_singleton()->body_set_state(rid, PhysicsServer::BODY_STATE_TRANSFORM, get_global_transform());
+				if(Enable3DPhysics())PhysicsServer::get_singleton()->body_set_state(rid, PhysicsServer::BODY_STATE_TRANSFORM, get_global_transform());
 			}
 
 			_on_transform_changed();
@@ -92,9 +92,9 @@ void CollisionObject::_notification(int p_what) {
 		} break;
 		case NOTIFICATION_EXIT_WORLD: {
 			if (area) {
-				PhysicsServer::get_singleton()->area_set_space(rid, RID());
+				if(Enable3DPhysics())PhysicsServer::get_singleton()->area_set_space(rid, RID());
 			} else {
-				PhysicsServer::get_singleton()->body_set_space(rid, RID());
+				if(Enable3DPhysics())PhysicsServer::get_singleton()->body_set_space(rid, RID());
 			}
 
 		} break;
@@ -104,9 +104,9 @@ void CollisionObject::_notification(int p_what) {
 void CollisionObject::set_collision_layer(uint32_t p_layer) {
 	collision_layer = p_layer;
 	if (area) {
-		PhysicsServer::get_singleton()->area_set_collision_layer(get_rid(), p_layer);
+		if(Enable3DPhysics())PhysicsServer::get_singleton()->area_set_collision_layer(get_rid(), p_layer);
 	} else {
-		PhysicsServer::get_singleton()->body_set_collision_layer(get_rid(), p_layer);
+		if(Enable3DPhysics())PhysicsServer::get_singleton()->body_set_collision_layer(get_rid(), p_layer);
 	}
 }
 
@@ -117,9 +117,9 @@ uint32_t CollisionObject::get_collision_layer() const {
 void CollisionObject::set_collision_mask(uint32_t p_mask) {
 	collision_mask = p_mask;
 	if (area) {
-		PhysicsServer::get_singleton()->area_set_collision_mask(get_rid(), p_mask);
+		if(Enable3DPhysics())PhysicsServer::get_singleton()->area_set_collision_mask(get_rid(), p_mask);
 	} else {
-		PhysicsServer::get_singleton()->body_set_collision_mask(get_rid(), p_mask);
+		if(Enable3DPhysics())PhysicsServer::get_singleton()->body_set_collision_mask(get_rid(), p_mask);
 	}
 }
 
@@ -191,9 +191,9 @@ void CollisionObject::_update_pickable() {
 
 	bool pickable = ray_pickable && is_visible_in_tree();
 	if (area) {
-		PhysicsServer::get_singleton()->area_set_ray_pickable(rid, pickable);
+		if(Enable3DPhysics())PhysicsServer::get_singleton()->area_set_ray_pickable(rid, pickable);
 	} else {
-		PhysicsServer::get_singleton()->body_set_ray_pickable(rid, pickable);
+		if(Enable3DPhysics())PhysicsServer::get_singleton()->body_set_ray_pickable(rid, pickable);
 	}
 }
 
@@ -389,9 +389,9 @@ void CollisionObject::shape_owner_set_disabled(uint32_t p_owner, bool p_disabled
 
 	for (int i = 0; i < sd.shapes.size(); i++) {
 		if (area) {
-			PhysicsServer::get_singleton()->area_set_shape_disabled(rid, sd.shapes[i].index, p_disabled);
+			if(Enable3DPhysics())PhysicsServer::get_singleton()->area_set_shape_disabled(rid, sd.shapes[i].index, p_disabled);
 		} else {
-			PhysicsServer::get_singleton()->body_set_shape_disabled(rid, sd.shapes[i].index, p_disabled);
+			if(Enable3DPhysics())PhysicsServer::get_singleton()->body_set_shape_disabled(rid, sd.shapes[i].index, p_disabled);
 		}
 	}
 	_update_shape_data(p_owner);
@@ -425,9 +425,9 @@ void CollisionObject::shape_owner_set_transform(uint32_t p_owner, const Transfor
 	sd.xform = p_transform;
 	for (int i = 0; i < sd.shapes.size(); i++) {
 		if (area) {
-			PhysicsServer::get_singleton()->area_set_shape_transform(rid, sd.shapes[i].index, p_transform);
+			if(Enable3DPhysics())PhysicsServer::get_singleton()->area_set_shape_transform(rid, sd.shapes[i].index, p_transform);
 		} else {
-			PhysicsServer::get_singleton()->body_set_shape_transform(rid, sd.shapes[i].index, p_transform);
+			if(Enable3DPhysics())PhysicsServer::get_singleton()->body_set_shape_transform(rid, sd.shapes[i].index, p_transform);
 		}
 	}
 
@@ -455,9 +455,9 @@ void CollisionObject::shape_owner_add_shape(uint32_t p_owner, const Ref<Shape> &
 	s.shape = p_shape;
 
 	if (area) {
-		PhysicsServer::get_singleton()->area_add_shape(rid, p_shape->get_rid(), sd.xform, sd.disabled);
+		if(Enable3DPhysics())PhysicsServer::get_singleton()->area_add_shape(rid, p_shape->get_rid(), sd.xform, sd.disabled);
 	} else {
-		PhysicsServer::get_singleton()->body_add_shape(rid, p_shape->get_rid(), sd.xform, sd.disabled);
+		if(Enable3DPhysics())PhysicsServer::get_singleton()->body_add_shape(rid, p_shape->get_rid(), sd.xform, sd.disabled);
 	}
 	sd.shapes.push_back(s);
 
@@ -491,9 +491,9 @@ void CollisionObject::shape_owner_remove_shape(uint32_t p_owner, int p_shape) {
 	int index_to_remove = s.index;
 
 	if (area) {
-		PhysicsServer::get_singleton()->area_remove_shape(rid, index_to_remove);
+		if(Enable3DPhysics())PhysicsServer::get_singleton()->area_remove_shape(rid, index_to_remove);
 	} else {
-		PhysicsServer::get_singleton()->body_remove_shape(rid, index_to_remove);
+		if(Enable3DPhysics())PhysicsServer::get_singleton()->body_remove_shape(rid, index_to_remove);
 	}
 
 	if (s.debug_shape.is_valid()) {
@@ -549,9 +549,9 @@ CollisionObject::CollisionObject(RID p_rid, bool p_area) {
 	total_subshapes = 0;
 
 	if (p_area) {
-		PhysicsServer::get_singleton()->area_attach_object_instance_id(rid, get_instance_id());
+		if(Enable3DPhysics())PhysicsServer::get_singleton()->area_attach_object_instance_id(rid, get_instance_id());
 	} else {
-		PhysicsServer::get_singleton()->body_attach_object_instance_id(rid, get_instance_id());
+		if(Enable3DPhysics())PhysicsServer::get_singleton()->body_attach_object_instance_id(rid, get_instance_id());
 	}
 	//set_transform_notify(true);
 }
@@ -587,5 +587,5 @@ CollisionObject::CollisionObject() {
 }
 
 CollisionObject::~CollisionObject() {
-	PhysicsServer::get_singleton()->free(rid);
+	if(Enable3DPhysics())PhysicsServer::get_singleton()->free(rid);
 }

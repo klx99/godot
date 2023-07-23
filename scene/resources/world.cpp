@@ -305,7 +305,7 @@ Ref<Environment> World::get_fallback_environment() const {
 }
 
 PhysicsDirectSpaceState *World::get_direct_space_state() {
-	return PhysicsServer::get_singleton()->space_get_direct_state(space);
+	return Enable3DPhysics()?PhysicsServer::get_singleton()->space_get_direct_state(space):NULL;
 }
 
 void World::get_camera_list(List<Camera *> *r_cameras) {
@@ -332,16 +332,17 @@ void World::_bind_methods() {
 }
 
 World::World() {
-	space = RID_PRIME(PhysicsServer::get_singleton()->space_create());
+	space = RID_PRIME(Enable3DPhysics()?PhysicsServer::get_singleton()->space_create():RID());
 	scenario = RID_PRIME(VisualServer::get_singleton()->scenario_create());
 
-	PhysicsServer::get_singleton()->space_set_active(space, true);
-	PhysicsServer::get_singleton()->area_set_param(space, PhysicsServer::AREA_PARAM_GRAVITY, GLOBAL_DEF("physics/3d/default_gravity", 9.8));
-	PhysicsServer::get_singleton()->area_set_param(space, PhysicsServer::AREA_PARAM_GRAVITY_VECTOR, GLOBAL_DEF("physics/3d/default_gravity_vector", Vector3(0, -1, 0)));
-	PhysicsServer::get_singleton()->area_set_param(space, PhysicsServer::AREA_PARAM_LINEAR_DAMP, GLOBAL_DEF("physics/3d/default_linear_damp", 0.1));
+	if(Enable3DPhysics())PhysicsServer::get_singleton()->space_set_active(space, true);
+	if(Enable3DPhysics())PhysicsServer::get_singleton()->area_set_param(space, PhysicsServer::AREA_PARAM_GRAVITY, GLOBAL_DEF("physics/3d/default_gravity", 9.8));
+	if(Enable3DPhysics())PhysicsServer::get_singleton()->area_set_param(space, PhysicsServer::AREA_PARAM_GRAVITY_VECTOR, GLOBAL_DEF("physics/3d/default_gravity_vector", Vector3(0, -1, 0)));
+	if(Enable3DPhysics())PhysicsServer::get_singleton()->area_set_param(space, PhysicsServer::AREA_PARAM_LINEAR_DAMP, GLOBAL_DEF("physics/3d/default_linear_damp", 0.1));
 	ProjectSettings::get_singleton()->set_custom_property_info("physics/3d/default_linear_damp", PropertyInfo(Variant::REAL, "physics/3d/default_linear_damp", PROPERTY_HINT_RANGE, "-1,100,0.001,or_greater"));
-	PhysicsServer::get_singleton()->area_set_param(space, PhysicsServer::AREA_PARAM_ANGULAR_DAMP, GLOBAL_DEF("physics/3d/default_angular_damp", 0.1));
+	if(Enable3DPhysics())PhysicsServer::get_singleton()->area_set_param(space, PhysicsServer::AREA_PARAM_ANGULAR_DAMP, GLOBAL_DEF("physics/3d/default_angular_damp", 0.1));
 	ProjectSettings::get_singleton()->set_custom_property_info("physics/3d/default_angular_damp", PropertyInfo(Variant::REAL, "physics/3d/default_angular_damp", PROPERTY_HINT_RANGE, "-1,100,0.001,or_greater"));
+	
 
 	// Create default navigation map
 	navigation_map = NavigationServer::get_singleton()->map_create();
@@ -359,7 +360,7 @@ World::World() {
 }
 
 World::~World() {
-	PhysicsServer::get_singleton()->free(space);
+	if(Enable3DPhysics())PhysicsServer::get_singleton()->free(space);
 	VisualServer::get_singleton()->free(scenario);
 	NavigationServer::get_singleton()->free(navigation_map);
 

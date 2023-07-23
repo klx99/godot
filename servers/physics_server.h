@@ -841,4 +841,5 @@ VARIANT_ENUM_CAST(PhysicsServer::G6DOFJointAxisFlag);
 VARIANT_ENUM_CAST(PhysicsServer::AreaBodyStatus);
 VARIANT_ENUM_CAST(PhysicsServer::ProcessInfo);
 
+bool Enable3DPhysics();
 #endif // PHYSICS_SERVER_H

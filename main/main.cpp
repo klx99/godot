@@ -162,6 +162,10 @@ static bool disable_render_loop = false;
 static int fixed_fps = -1;
 static bool print_fps = false;
 
+bool Enable3DPhysics()
+{
+	return false;
+}
 /* Helper methods */
 
 // Used by Mono module, should likely be registered in Engine singleton instead
@@ -192,6 +196,8 @@ void initialize_physics() {
 	GLOBAL_DEF("physics/3d/godot_physics/bvh_collision_margin", 0.1);
 	ProjectSettings::get_singleton()->set_custom_property_info("physics/3d/godot_physics/bvh_collision_margin", PropertyInfo(Variant::REAL, "physics/3d/godot_physics/bvh_collision_margin", PROPERTY_HINT_RANGE, "0.0,2.0,0.01"));
 
+
+  if(Enable3DPhysics()){ 
 	/// 3D Physics Server
 	physics_server = PhysicsServerManager::new_server(ProjectSettings::get_singleton()->get(PhysicsServerManager::setting_property_name));
 	if (!physics_server) {
@@ -200,6 +206,7 @@ void initialize_physics() {
 	}
 	ERR_FAIL_COND(!physics_server);
 	physics_server->init();
+  }
 
 	/// 2D Physics server
 	physics_2d_server = Physics2DServerManager::new_server(ProjectSettings::get_singleton()->get(Physics2DServerManager::setting_property_name));
@@ -212,8 +219,10 @@ void initialize_physics() {
 }
 
 void finalize_physics() {
+   if(Enable3DPhysics()){ 
 	physics_server->finish();
 	memdelete(physics_server);
+   }
 
 	physics_2d_server->finish();
 	memdelete(physics_2d_server);
@@ -2259,7 +2268,7 @@ bool Main::iteration() {
 
 		uint64_t physics_begin = OS::get_singleton()->get_ticks_usec();
 
-		PhysicsServer::get_singleton()->flush_queries();
+		if(Enable3DPhysics())PhysicsServer::get_singleton()->flush_queries();
 
 		Physics2DServer::get_singleton()->sync();
 		Physics2DServer::get_singleton()->flush_queries();
@@ -2273,7 +2282,7 @@ bool Main::iteration() {
 		NavigationServer::get_singleton_mut()->process(frame_slice * time_scale);
 		message_queue->flush();
 
-		PhysicsServer::get_singleton()->step(frame_slice * time_scale);
+		if(Enable3DPhysics())PhysicsServer::get_singleton()->step(frame_slice * time_scale);
 
 		Physics2DServer::get_singleton()->end_sync();
 		Physics2DServer::get_singleton()->step(frame_slice * time_scale);

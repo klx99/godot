@@ -291,7 +291,7 @@ void Viewport::_notification(int p_what) {
 				contact_2d_debug = RID_PRIME(VisualServer::get_singleton()->canvas_item_create());
 				VisualServer::get_singleton()->canvas_item_set_parent(contact_2d_debug, find_world_2d()->get_canvas());
 				//3D
-				PhysicsServer::get_singleton()->space_set_debug_contacts(find_world()->get_space(), get_tree()->get_collision_debug_contact_count());
+				if(Enable3DPhysics())PhysicsServer::get_singleton()->space_set_debug_contacts(find_world()->get_space(), get_tree()->get_collision_debug_contact_count());
 				contact_3d_debug_multimesh = RID_PRIME(VisualServer::get_singleton()->multimesh_create());
 				VisualServer::get_singleton()->multimesh_allocate(contact_3d_debug_multimesh, get_tree()->get_collision_debug_contact_count(), VS::MULTIMESH_TRANSFORM_3D, VS::MULTIMESH_COLOR_8BIT);
 				VisualServer::get_singleton()->multimesh_set_visible_instances(contact_3d_debug_multimesh, 0);
@@ -382,8 +382,8 @@ void Viewport::_notification(int p_what) {
 			}
 
 			if (get_tree()->is_debugging_collisions_hint() && contact_3d_debug_multimesh.is_valid()) {
-				Vector<Vector3> points = PhysicsServer::get_singleton()->space_get_contacts(find_world()->get_space());
-				int point_count = PhysicsServer::get_singleton()->space_get_contact_count(find_world()->get_space());
+				Vector<Vector3> points = Enable3DPhysics() ? PhysicsServer::get_singleton()->space_get_contacts(find_world()->get_space()) : Vector<Vector3>();
+				int point_count = Enable3DPhysics()?PhysicsServer::get_singleton()->space_get_contact_count(find_world()->get_space()):0;
 
 				VS::get_singleton()->multimesh_set_visible_instances(contact_3d_debug_multimesh, point_count);
 
@@ -644,7 +644,7 @@ void Viewport::_process_picking(bool p_ignore_paused) {
 				Vector3 dir = camera->project_ray_normal(pos);
 				float far = camera->far;
 
-				PhysicsDirectSpaceState *space = PhysicsServer::get_singleton()->space_get_direct_state(find_world()->get_space());
+				PhysicsDirectSpaceState *space = Enable3DPhysics()?PhysicsServer::get_singleton()->space_get_direct_state(find_world()->get_space()):NULL; 
 				if (space) {
 					bool col = space->intersect_ray(from, from + dir * far, result, Set<RID>(), 0xFFFFFFFF, true, true, true);
 					ObjectID new_collider = 0;
